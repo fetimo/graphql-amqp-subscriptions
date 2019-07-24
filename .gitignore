@@ -24,7 +24,7 @@ junit
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 release
-lib
+
 dist
 
 # Dependency directory

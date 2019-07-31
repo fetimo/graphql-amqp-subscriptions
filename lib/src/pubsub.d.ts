@@ -3,6 +3,8 @@ import { PubSubAMQPOptions } from './interfaces';
 export declare class AMQPPubSub implements PubSubEngine {
     private connection;
     private exchange;
+    private exchangeType;
+    private queueName;
     private publisher;
     private subscriber;
     private subscriptionMap;

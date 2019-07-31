@@ -13,6 +13,8 @@ export class AMQPPubSub implements PubSubEngine {
 
   private connection: amqp.Connection;
   private exchange: string;
+  private exchangeType: string;
+  private queueName: string;
 
   private publisher: AMQPPublisher;
   private subscriber: AMQPSubscriber;
@@ -27,7 +29,9 @@ export class AMQPPubSub implements PubSubEngine {
   ) {
     // Setup Variables
     this.connection = options.connection;
-    this.exchange = options.exchange || 'graphql_subscriptions';
+    this.exchange = options.exchange || '';
+    this.exchangeType = options.exchange || 'topic';
+    this.queueName = options.queueName || '';
 
     this.subscriptionMap = {};
     this.subsRefsMap = {};
@@ -59,7 +63,7 @@ export class AMQPPubSub implements PubSubEngine {
       this.subsRefsMap[routingKey] = newRefs;
       return Promise.resolve(id);
     } else {
-      return this.subscriber.subscribe(this.exchange, routingKey, this.onMessage.bind(this))
+      return this.subscriber.subscribe(this.exchange, routingKey, this.exchangeType, this.queueName, this.onMessage.bind(this))
       .then(disposer => {
         this.subsRefsMap[routingKey] = [
           ...(this.subsRefsMap[routingKey] || []),
@@ -104,7 +108,7 @@ export class AMQPPubSub implements PubSubEngine {
   private onMessage(routingKey: string, message: any): void {
     const subscribers = this.subsRefsMap[routingKey];
 
-    // Don't work for nothing..
+    // Don't work for nothing...
     if (!subscribers || !subscribers.length) {
       this.unsubscribeForKey(routingKey);
       return;

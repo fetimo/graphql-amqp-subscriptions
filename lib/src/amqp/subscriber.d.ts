@@ -5,5 +5,5 @@ export declare class AMQPSubscriber {
     private logger;
     private channel;
     constructor(connection: amqp.Connection, logger: Debug.IDebugger);
-    subscribe(exchange: string, routingKey: string, action: (routingKey: string, message: any) => void): Promise<() => PromiseLike<any>>;
+    subscribe(exchange: string, routingKey: string, exchangeType: string | undefined, queueName: string | undefined, action: (routingKey: string, message: any) => void): Promise<() => PromiseLike<any>>;
 }

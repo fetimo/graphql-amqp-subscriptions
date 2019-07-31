@@ -46,7 +46,7 @@ describe('AMQP Subscriber', () => {
   });
 
   it('should be able to receive a message through an exchange', (done) => {
-    subscriber.subscribe('exchange', '*.test', (routingKey, message) => {
+    subscriber.subscribe('exchange', '*.test', '', '', (routingKey, message, ) => {
       expect(routingKey).to.exist;
       expect(message).to.exist;
       expect(message.test).to.exist;
@@ -71,7 +71,7 @@ describe('AMQP Subscriber', () => {
   });
 
   it('should be able to unsubscribe', (done) => {
-    subscriber.subscribe('exchange', 'test.test', () => {
+    subscriber.subscribe('exchange', 'test.test', 'test', 'test', () => {
       done(new Error('Should not reach'));
     })
     .then(disposer => {

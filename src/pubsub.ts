@@ -30,7 +30,7 @@ export class AMQPPubSub implements PubSubEngine {
     // Setup Variables
     this.connection = options.connection;
     this.exchange = options.exchange || '';
-    this.exchangeType = options.exchange || 'topic';
+    this.exchangeType = options.exchangeType || 'topic';
     this.queueName = options.queueName || '';
 
     this.subscriptionMap = {};

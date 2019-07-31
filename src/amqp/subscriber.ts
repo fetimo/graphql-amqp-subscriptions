@@ -19,6 +19,8 @@ export class AMQPSubscriber {
     routingKey: string,
     exchangeType: string = 'topic',
     queueName: string = '',
+    exchangeOptions: object = { durable: false, autoDelete: true },
+    queueOptions: object = { exclusive: true, durable: false, autoDelete: true },
     action: (routingKey: string, message: any) => void
   ): Promise<() => PromiseLike<any>> {
     let promise: PromiseLike<amqp.Channel>;
@@ -30,9 +32,9 @@ export class AMQPSubscriber {
     return promise
     .then(async ch => {
       this.channel = ch;
-      return ch.assertExchange(exchange, exchangeType, { durable: false, autoDelete: true })
+      return ch.assertExchange(exchange, exchangeType, exchangeOptions)
       .then(() => {
-        return ch.assertQueue(queueName, { exclusive: true, durable: false, autoDelete: true });
+        return ch.assertQueue(queueName, queueOptions);
       })
       .then(async queue => {
         return ch.bindQueue(queue.queue, exchange, routingKey)

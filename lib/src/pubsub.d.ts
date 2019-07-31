@@ -5,6 +5,8 @@ export declare class AMQPPubSub implements PubSubEngine {
     private exchange;
     private exchangeType;
     private queueName;
+    private exchangeOptions;
+    private queueOptions;
     private publisher;
     private subscriber;
     private subscriptionMap;

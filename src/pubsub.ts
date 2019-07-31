@@ -2,7 +2,7 @@ import { PubSubEngine } from 'graphql-subscriptions';
 import amqp from 'amqplib';
 import Debug from 'debug';
 
-import { PubSubAMQPOptions } from './interfaces';
+import { PubSubAMQPOptions, QueueOptions, ExchangeOptions } from './interfaces';
 import { AMQPPublisher } from './amqp/publisher';
 import { AMQPSubscriber } from './amqp/subscriber';
 import { PubSubAsyncIterator } from './pubsub-async-iterator';
@@ -15,6 +15,8 @@ export class AMQPPubSub implements PubSubEngine {
   private exchange: string;
   private exchangeType: string;
   private queueName: string;
+  private exchangeOptions: ExchangeOptions;
+  private queueOptions: QueueOptions;
 
   private publisher: AMQPPublisher;
   private subscriber: AMQPSubscriber;
@@ -32,6 +34,8 @@ export class AMQPPubSub implements PubSubEngine {
     this.exchange = options.exchange || '';
     this.exchangeType = options.exchangeType || 'topic';
     this.queueName = options.queueName || '';
+    this.exchangeOptions = options.exchangeOptions || {};
+    this.queueOptions = options.queueOptions || {};
 
     this.subscriptionMap = {};
     this.subsRefsMap = {};
@@ -63,7 +67,7 @@ export class AMQPPubSub implements PubSubEngine {
       this.subsRefsMap[routingKey] = newRefs;
       return Promise.resolve(id);
     } else {
-      return this.subscriber.subscribe(this.exchange, routingKey, this.exchangeType, this.queueName, this.onMessage.bind(this))
+      return this.subscriber.subscribe(this.exchange, routingKey, this.exchangeType, this.queueName, this.exchangeOptions, this.queueOptions, this.onMessage.bind(this))
       .then(disposer => {
         this.subsRefsMap[routingKey] = [
           ...(this.subsRefsMap[routingKey] || []),

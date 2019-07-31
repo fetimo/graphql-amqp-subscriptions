@@ -69,6 +69,7 @@ export class AMQPPubSub implements PubSubEngine {
     } else {
       return this.subscriber.subscribe(this.exchange, routingKey, this.exchangeType, this.queueName, this.exchangeOptions, this.queueOptions, this.onMessage.bind(this))
       .then(disposer => {
+        console.log({routingKey})
         this.subsRefsMap[routingKey] = [
           ...(this.subsRefsMap[routingKey] || []),
           id,

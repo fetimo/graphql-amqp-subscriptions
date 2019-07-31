@@ -67,9 +67,17 @@ export class AMQPPubSub implements PubSubEngine {
       this.subsRefsMap[routingKey] = newRefs;
       return Promise.resolve(id);
     } else {
-      return this.subscriber.subscribe(this.exchange, routingKey, this.exchangeType, this.queueName, this.exchangeOptions, this.queueOptions, this.onMessage.bind(this))
+      return this.subscriber.subscribe(
+        this.exchange, 
+        routingKey, 
+        this.exchangeType, 
+        this.queueName, 
+        this.exchangeOptions, 
+        this.queueOptions, 
+        this.onMessage.bind(this)
+      )
       .then(disposer => {
-        console.log({routingKey})
+        console.log('lib routingKey', routingKey);
         this.subsRefsMap[routingKey] = [
           ...(this.subsRefsMap[routingKey] || []),
           id,

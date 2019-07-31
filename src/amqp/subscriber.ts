@@ -34,6 +34,7 @@ export class AMQPSubscriber {
       this.channel = ch;
       return ch.assertExchange(exchange, exchangeType, exchangeOptions)
       .then(() => {
+        console.log('lib queueName', queueName)
         return ch.assertQueue(queueName, queueOptions);
       })
       .then(async queue => {
